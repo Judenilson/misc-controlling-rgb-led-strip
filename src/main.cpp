@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <FastLED.h>
+#include <EEPROM.h>
 
 #define ledPin 5           // Porta Digital Saída para LEDS
 #define quantidadeLeds 101 // Quantidade de LEDS na fita
@@ -7,11 +8,15 @@
 
 #define button 7
 
-int effect = 0;
-int lastEffect = 0;
-int maxEffects = 9;
+int8_t effect = 0;
+int8_t lastEffect = 0;
+int8_t maxEffects = 9;
+int addr = 0; // endereço da memória para salvar o efeito
+int statusOnOff = 0;
 
 CRGB leds[quantidadeLeds];
+
+void apagarLeds();
 
 void setup()
 {
@@ -19,9 +24,14 @@ void setup()
   pinMode(button, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
+
   Serial.begin(9600);
   delay(1000);
   Serial.println("Iniciando Comunicação Serial!");
+
+  effect = EEPROM.read(addr);
+  delay(100);
+  apagarLeds();
 }
 
 void apagarLeds()
@@ -35,6 +45,7 @@ void apagarLeds()
 
 void effectLoopA()
 {
+  apagarLeds();
   while (true)
   {
     for (int i = 0; i < quantidadeLeds; i++)
@@ -72,6 +83,7 @@ void effectLoopA()
 
 void effectLoopB()
 {
+  apagarLeds();
   for (int i = 0; i < quantidadeLeds; i++)
   {
     leds[i] = CRGB(105, 7, 250);
@@ -118,6 +130,7 @@ void effectLoopB()
 
 void effectLoopC()
 {
+  apagarLeds();
   int pause = 50;
   while (true)
   {
@@ -166,6 +179,7 @@ void effectLoopC()
 
 void effectLoopD()
 {
+  apagarLeds();
   int pause = 50;
 
   for (int i = 0; i < quantidadeLeds; i++)
@@ -201,103 +215,212 @@ void effectLoopD()
   }
 }
 
+void effectLoopE()
+{
+  apagarLeds();
+  for (int i = 0; i < quantidadeLeds; i++)
+  {
+    if (i >= 75)
+    {
+      leds[i] = CRGB(250, 7, 40);
+    }
+    else if (i >= 50)
+    {
+      leds[i] = CRGB(105, 7, 250);
+    }
+    else if (i >= 25)
+    {
+      leds[i] = CRGB(250, 7, 40);
+    }
+    else
+    {
+      leds[i] = CRGB(105, 7, 250);
+    }
+  }
+  FastLED.show();
+}
+
+void effectLoopF()
+{
+  apagarLeds();
+  for (int i = 0; i < quantidadeLeds; i++)
+  {
+    leds[i] = CRGB(250, 7, 40);
+  }
+  FastLED.show();
+}
+
+void effectLoopG()
+{
+  apagarLeds();
+  for (int i = 0; i < quantidadeLeds; i++)
+  {
+    leds[i] = CRGB(105, 7, 250);
+  }
+  FastLED.show();
+}
+
+void effectLoopH()
+{
+  apagarLeds();
+  for (int i = 0; i < quantidadeLeds; i++)
+  {
+    leds[i] = CRGB(0, 255, 0);
+  }
+  FastLED.show();
+}
+
+void effectLoopDefault()
+{
+  apagarLeds();
+  for (int i = 0; i < 11; i++)
+  {
+    leds[i] = CRGB(255, 255, 255);
+  }
+  FastLED.show();
+}
+
+void effectLoopSetupSave()
+{
+  apagarLeds();
+  for (int i = 0; i < quantidadeLeds; i++)
+  {
+    leds[i] = CRGB(255, 0, 0);
+  }
+  FastLED.show();
+  delay(250);
+  apagarLeds();
+  delay(250);
+  for (int i = 0; i < quantidadeLeds; i++)
+  {
+    leds[i] = CRGB(255, 0, 0);
+  }
+  FastLED.show();
+  delay(250);
+  apagarLeds();
+  delay(250);
+  for (int i = 0; i < quantidadeLeds; i++)
+  {
+    leds[i] = CRGB(255, 0, 0);
+  }
+  FastLED.show();
+  delay(250);
+  apagarLeds();
+  delay(250);
+}
+
+void effectsChange(int effectnumber)
+{
+  switch (effectnumber)
+  {
+  case 1:
+    effectLoopDefault();
+    break;
+
+  case 2:
+    effectLoopA();
+    break;
+
+  case 3:
+    effectLoopB();
+    break;
+
+  case 4:
+    effectLoopC();
+    break;
+
+  case 5:
+    effectLoopD();
+    break;
+
+  case 6:
+    effectLoopE();
+    break;
+
+  case 7:
+    effectLoopF();
+    break;
+
+  case 8:
+    effectLoopG();
+    break;
+
+  case 9:
+    effectLoopH();
+    break;
+
+  default:
+    effectLoopDefault();
+    break;
+  }
+}
+
 void loop()
 {
   if (digitalRead(button))
   {
-    effect++;
-
-    delay(100);
+    int startPress = millis();
+    int timerPress = 0;
     while (digitalRead(button))
     {
-      ;
+      timerPress = millis() - startPress;
     }
-  }
-  if (effect > maxEffects)
-  {
-    effect = 1;
-  }
 
-  if (lastEffect != effect)
-  {
-    lastEffect = effect;
-
-    switch (effect)
+    if ((timerPress > 700) && (timerPress < 3000)) // ligar e desligar os leds.
     {
-    case 1:
-      apagarLeds();
-      for (int i = 0; i < quantidadeLeds; i++)
+      if (statusOnOff)
       {
-        if (i >= 75)
-        {
-          leds[i] = CRGB(250, 7, 40);
-        }
-        else if (i >= 50)
-        {
-          leds[i] = CRGB(105, 7, 250);
-        }
-        else if (i >= 25)
-        {
-          leds[i] = CRGB(250, 7, 40);
-        }
-        else
-        {
-          leds[i] = CRGB(105, 7, 250);
-        }
+        apagarLeds();
+        statusOnOff = 0;
+        Serial.println("Desligando...");
       }
-      FastLED.show();
-      break;
-
-    case 2:
-      apagarLeds();
-      effectLoopA();
-      break;
-
-    case 3:
-      apagarLeds();
-      effectLoopB();
-      break;
-
-    case 4:
-      apagarLeds();
-      for (int i = 0; i < quantidadeLeds; i++)
+      else
       {
-        leds[i] = CRGB(250, 7, 40);
+        statusOnOff = 1;
       }
-      FastLED.show();
-      break;
-
-    case 5:
-      apagarLeds();
-      for (int i = 0; i < quantidadeLeds; i++)
-      {
-        leds[i] = CRGB(105, 7, 250);
-      }
-      FastLED.show();
-      break;
-
-    case 6:
-      apagarLeds();
-      for (int i = 0; i < quantidadeLeds; i++)
-      {
-        leds[i] = CRGB(0, 255, 0);
-      }
-      FastLED.show();
-      break;
-
-    case 7:
-      apagarLeds();
-      effectLoopC();
-      break;
-
-    case 8:
-      apagarLeds();
-      effectLoopD();
-      break;
-
-    default:
-      apagarLeds();
-      break;
     }
+
+    if (statusOnOff)
+    {
+      if (timerPress > 3000) // salvar efeito
+      {
+        EEPROM.update(addr, effect);
+        delay(10);
+        effectLoopSetupSave();
+        Serial.println("Salvando na memória...");
+      }
+      else if (timerPress > 700) // ativar efeito ao ligar
+      {
+        effect = EEPROM.read(addr);
+        delay(100);
+        effectsChange(effect);
+        Serial.println("Ligando LEDs...");
+      }
+      else if (timerPress > 50) // trocar effeito
+      {
+        effect++;
+        if (effect > maxEffects) // mantendo o loop de efeitos
+        {
+          effect = 1;
+          Serial.println("Retornando Loop de efeitos...");
+        }
+        while (digitalRead(button))
+        {
+          ;
+        }
+        if (lastEffect != effect) // só chama os efeitos se houver mudança.
+        {
+          lastEffect = effect;
+          effectsChange(effect);
+          Serial.println("Trocando Efeito...");
+        }
+      }
+    }
+
+    Serial.println("Log:");
+    Serial.println("Tempo do pressionamento do botão: " + (String)timerPress);
+    Serial.println("Status dispositivo: " + (String)statusOnOff);
+    Serial.println("Efeito atual: " + (String)effect);
+    Serial.println("----------------------------------------");
   }
 }
