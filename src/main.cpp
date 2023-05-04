@@ -16,6 +16,14 @@ int statusOnOff = 0;
 
 CRGB leds[quantidadeLeds];
 
+// Cores
+int colorBlack = 0;
+int colorWhite = 255;
+// int colorA [] = {250, 7, 40}; //light red
+// int colorB [] = {105, 7, 250}; //purple
+int colorA [] = {255, 76, 0}; //orange
+int colorB [] = {0, 255, 255}; //light blue
+
 void apagarLeds();
 
 void setup()
@@ -38,7 +46,7 @@ void apagarLeds()
 {
   for (int i = 0; i < quantidadeLeds; i++)
   {
-    leds[i] = CRGB(0, 0, 0);
+    leds[i] = CRGB(colorBlack, colorBlack, colorBlack);
   }
   FastLED.show();
 }
@@ -50,12 +58,12 @@ void effectLoopA()
   {
     for (int i = 0; i < quantidadeLeds; i++)
     {
-      leds[i] = CRGB(105, 7, 250);
-      leds[quantidadeLeds - 1 - i] = CRGB(250, 7, 40);
+      leds[i] = CRGB(colorB[0],colorB[1],colorB[2]);
+      leds[quantidadeLeds - 1 - i] = CRGB(colorA[0],colorA[1],colorA[2]);
       FastLED.show();
       delay(10);
-      leds[i] = CRGB(0, 0, 0);
-      leds[quantidadeLeds - 1 - i] = CRGB(0, 0, 0);
+      leds[i] = CRGB(colorBlack, colorBlack, colorBlack);
+      leds[quantidadeLeds - 1 - i] = CRGB(colorBlack, colorBlack, colorBlack);
       FastLED.show();
 
       if (digitalRead(button))
@@ -65,12 +73,12 @@ void effectLoopA()
     }
     for (int i = 0; i < quantidadeLeds; i++)
     {
-      leds[i] = CRGB(250, 7, 40);
-      leds[quantidadeLeds - 1 - i] = CRGB(105, 7, 250);
+      leds[i] = CRGB(colorA[0],colorA[1],colorA[2]);
+      leds[quantidadeLeds - 1 - i] = CRGB(colorB[0],colorB[1],colorB[2]);
       FastLED.show();
       delay(10);
-      leds[i] = CRGB(0, 0, 0);
-      leds[quantidadeLeds - 1 - i] = CRGB(0, 0, 0);
+      leds[i] = CRGB(colorBlack, colorBlack, colorBlack);
+      leds[quantidadeLeds - 1 - i] = CRGB(colorBlack, colorBlack, colorBlack);
       FastLED.show();
 
       if (digitalRead(button))
@@ -86,7 +94,7 @@ void effectLoopB()
   apagarLeds();
   for (int i = 0; i < quantidadeLeds; i++)
   {
-    leds[i] = CRGB(105, 7, 250);
+    leds[i] = CRGB(colorB[0],colorB[1],colorB[2]);
   }
   FastLED.show();
   while (true)
@@ -95,11 +103,11 @@ void effectLoopB()
     {
       if (i < quantidadeLeds)
       {
-        leds[i] = CRGB(250, 7, 40);
+        leds[i] = CRGB(colorA[0],colorA[1],colorA[2]);
       }
       if (i > 9)
       {
-        leds[i - 10] = CRGB(105, 7, 250);
+        leds[i - 10] = CRGB(colorB[0],colorB[1],colorB[2]);
       }
       FastLED.show();
       delay(10);
@@ -112,11 +120,11 @@ void effectLoopB()
     {
       if (i > 0)
       {
-        leds[i] = CRGB(250, 7, 40);
+        leds[i] = CRGB(colorA[0],colorA[1],colorA[2]);
       }
       if (i < quantidadeLeds - 10)
       {
-        leds[i + 10] = CRGB(105, 7, 250);
+        leds[i + 10] = CRGB(colorB[0],colorB[1],colorB[2]);
       }
       FastLED.show();
       delay(10);
@@ -136,7 +144,7 @@ void effectLoopC()
   {
     for (int i = 0; i < quantidadeLeds; i++)
     {
-      leds[i] = CRGB(105, 7, 250);
+      leds[i] = CRGB(colorB[0],colorB[1],colorB[2]);
       delay(pause);
       FastLED.show();
       if (digitalRead(button))
@@ -146,7 +154,7 @@ void effectLoopC()
     }
     for (int i = 0; i < quantidadeLeds; i++)
     {
-      leds[i] = CRGB(250, 7, 40);
+      leds[i] = CRGB(colorA[0],colorA[1],colorA[2]);
       delay(pause);
       FastLED.show();
       if (digitalRead(button))
@@ -156,7 +164,7 @@ void effectLoopC()
     }
     for (int i = quantidadeLeds - 1; i >= 0; i--)
     {
-      leds[i] = CRGB(105, 7, 250);
+      leds[i] = CRGB(colorB[0],colorB[1],colorB[2]);
       delay(pause);
       FastLED.show();
       if (digitalRead(button))
@@ -166,7 +174,7 @@ void effectLoopC()
     }
     for (int i = quantidadeLeds - 1; i >= 0; i--)
     {
-      leds[i] = CRGB(250, 7, 40);
+      leds[i] = CRGB(colorA[0],colorA[1],colorA[2]);
       delay(pause);
       FastLED.show();
       if (digitalRead(button))
@@ -184,7 +192,7 @@ void effectLoopD()
 
   for (int i = 0; i < quantidadeLeds; i++)
   {
-    leds[i] = CRGB(105, 7, 250);
+    leds[i] = CRGB(colorB[0],colorB[1],colorB[2]);
   }
   FastLED.show();
 
@@ -192,8 +200,8 @@ void effectLoopD()
   {
     for (int i = 50; i < quantidadeLeds; i++)
     {
-      leds[i] = CRGB(250, 7, 40);
-      leds[100 - i] = CRGB(250, 7, 40);
+      leds[i] = CRGB(colorA[0],colorA[1],colorA[2]);
+      leds[100 - i] = CRGB(colorA[0],colorA[1],colorA[2]);
       delay(pause);
       FastLED.show();
       if (digitalRead(button))
@@ -203,8 +211,8 @@ void effectLoopD()
     }
     for (int i = 50; i < quantidadeLeds; i++)
     {
-      leds[i] = CRGB(105, 7, 250);
-      leds[100 - i] = CRGB(105, 7, 250);
+      leds[i] = CRGB(colorB[0],colorB[1],colorB[2]);
+      leds[100 - i] = CRGB(colorB[0],colorB[1],colorB[2]);
       delay(pause);
       FastLED.show();
       if (digitalRead(button))
@@ -222,19 +230,19 @@ void effectLoopE()
   {
     if (i >= 75)
     {
-      leds[i] = CRGB(250, 7, 40);
+      leds[i] = CRGB(colorA[0],colorA[1],colorA[2]);
     }
     else if (i >= 50)
     {
-      leds[i] = CRGB(105, 7, 250);
+      leds[i] = CRGB(colorB[0],colorB[1],colorB[2]);
     }
     else if (i >= 25)
     {
-      leds[i] = CRGB(250, 7, 40);
+      leds[i] = CRGB(colorA[0],colorA[1],colorA[2]);
     }
     else
     {
-      leds[i] = CRGB(105, 7, 250);
+      leds[i] = CRGB(colorB[0],colorB[1],colorB[2]);
     }
   }
   FastLED.show();
@@ -245,7 +253,7 @@ void effectLoopF()
   apagarLeds();
   for (int i = 0; i < quantidadeLeds; i++)
   {
-    leds[i] = CRGB(250, 7, 40);
+    leds[i] = CRGB(colorA[0],colorA[1],colorA[2]);
   }
   FastLED.show();
 }
@@ -255,7 +263,7 @@ void effectLoopG()
   apagarLeds();
   for (int i = 0; i < quantidadeLeds; i++)
   {
-    leds[i] = CRGB(105, 7, 250);
+    leds[i] = CRGB(colorB[0],colorB[1],colorB[2]);
   }
   FastLED.show();
 }
@@ -265,7 +273,7 @@ void effectLoopH()
   apagarLeds();
   for (int i = 0; i < quantidadeLeds; i++)
   {
-    leds[i] = CRGB(0, 255, 0);
+    leds[i] = CRGB(0, 255, 25);
   }
   FastLED.show();
 }
@@ -275,7 +283,7 @@ void effectLoopDefault()
   apagarLeds();
   for (int i = 0; i < 11; i++)
   {
-    leds[i] = CRGB(255, 255, 255);
+    leds[i] = CRGB(colorWhite,colorWhite,colorWhite);
   }
   FastLED.show();
 }
