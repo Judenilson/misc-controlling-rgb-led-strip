@@ -19,11 +19,11 @@ CRGB leds[quantidadeLeds];
 // Cores
 int colorBlack = 0;
 int colorWhite = 255;
-// int colorA [] = {250, 7, 40}; //light red
-// int colorB [] = {105, 7, 250}; //purple
-int colorA [] = {255, 76, 0}; //orange
+int colorA [] = {250, 7, 40}; //light red
+int colorB [] = {105, 7, 250}; //purple
+// int colorA [] = {255, 76, 0}; //orange
 // int colorB [] = {0, 255, 255}; //light blue
-int colorB [] = {0, 255, 120}; //light green
+// int colorB [] = {0, 255, 120}; //light green
 
 void apagarLeds();
 
